@@ -5,7 +5,7 @@ from tensorflow.contrib import training as contrib_training
 
 def MutagHParams():
     """
-    Returns HParams object which stores the hyperparameters for the Deep Divergence Graph Kernel
+    Returns HParams object which stores the hyperparameters for DDGK model used for the MUTAG benchmark dataset 
         Returns:
             tf.contrib_training.HParams: Hyperparameter set for DDGK
     """
@@ -252,7 +252,7 @@ def Encode(source, ckpt_prefix, hparams):
         tf.train.Saver(tf.trainable_variables()).save(session, ckpt_prefix)
 def Score(source, target, ckpt_prefix, hparams):
     """
-    _summary_
+    Calculates the divergence differences between Source graph and Target graph
     Args:
         source (nx.Graph): Source Graph
         target (nx.Graph): Target Graph
