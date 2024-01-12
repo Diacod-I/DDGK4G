@@ -1,36 +1,27 @@
 import networkx as nx
 import numpy as np
 import tensorflow.compat.v1 as tf
-from tensorflow.contrib import training as contrib_training
+from collections import namedtuple
 
-def MutagHParams():
+def MutagHParams(embedding_size=4, num_dnn_layers=4, score_window=10, learning_rate=0.01, train_num_epochs=600, score_num_epochs=600, node_label_loss_coefficient=0.0, num_node_labels=7, incident_label_loss_coefficient=0.0, num_edge_labels=4):
     """
-    Returns HParams object which stores the hyperparameters for DDGK model used for the MUTAG benchmark dataset 
+    Returns HParams object which stores the hyperparameters for DDGK model used for the MUTAG benchmark dataset
+        Args:
+            embedding_size (int): The size of node embeddings
+            num_dnn_layers (int): The number of layers in the DNN
+            score_window (int): The window to average for scoring loss and accuracy calculation.
+            learning_rate (int): The adam learning rate
+            train_num_epochs (int): The steps for training
+            score_num_epochs (int): The steps for node mapping and scoring
+            node_label_loss_coefficient (float): Label preserving loss for node mapping
+            num_node_labels (int): The number of node labels
+            incident_label_loss_coefficient (float): Label preserving loss for incident edges
+            num_edge_labels (int): The number of edge labels
+            
         Returns:
-            tf.contrib_training.HParams: Hyperparameter set for DDGK
+            Named Tuple HParams: Hyperparameter set for DDGK
     """
-    return contrib_training.HParams(
-            #The size of node embeddings.
-            embedding_size=4,
-            #The number of layers in the DNN.
-            num_dnn_layers=4,
-            #The window to average for scoring loss and accuracy calculation.
-            score_window=10,
-            #The adam learning rate.
-            learning_rate=0.01,
-            #The steps for training.
-            train_num_epochs=600
-            #The steps for node mapping and scoring.
-            score_num_epochs=600,
-            #The label preserving loss for node mapping.
-            node_label_loss_coefficient=0.0,
-            #The number of node labels.
-            num_node_labels=7,
-            #The label preserving loss for incident edges.
-            incident_label_loss_coefficient=0.0,
-            #The number of edge labels.
-            num_edge_labels=4
-    )
+    return namedtuple('HParams',MutagHParams.__code__.co_varnames)(MutagHParams.__defaults__)
 
 def AdjMatrixAccuracy(logits, labels):
     """
@@ -215,7 +206,7 @@ def Encode(source, ckpt_prefix, hparams):
         Args:
             source (tf.Graph): Source Graph
             ckpt_prefix (tf.train.Checkpoint): Tensorflow Checkpoint prefix
-            hparams (tf.contrib.contrib_training.HParams): Hyperparameter set
+            hparams (namedtuple "HParams"): Hyperparameter set
     """
     tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
     tf.reset_default_graph()

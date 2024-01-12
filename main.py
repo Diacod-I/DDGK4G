@@ -15,8 +15,9 @@ from sklearn import svm
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import ShuffleSplit
 import tqdm
+from scipy.spatial import distance
 
-import DDGK4G.model as model
+import model
 
 FLAGS = flags.FLAGS
 flags.DEFINE_string("data_set",None,"The data set.")
@@ -25,6 +26,12 @@ flags.DEFINE_integer("num_threads", 32, "The number of threads")
 flags.DEFINE_string("working_dir", None, "The working directory")
 
 def load():
+    """
+    Loads the dataset using a URL taken from global flag
+
+    Returns:
+        Node Labels into integers
+    """
     resp = urllib.request.urlopen(FLAGS.data_set)
     if ".zip" in FLAGS.data_set:
         unzipped = zipfile.ZipFile(io.BytesIO(resp.read()))
@@ -72,6 +79,14 @@ def load():
     print("Number of graphs loaded from dataset {}: {}". format(FLAGS.data_set, len(gs)))
     
     def convert(g):
+        """
+        Local function which converts node labels to integers
+        Args:
+            g (nx.Graph): Networkx Graph object
+
+        Returns:
+            Node labels into integers
+        """
         return nx.convert_node_labels_to_integers(g)
     
     return {k: convert(v) for k,v in gs.items()}
