@@ -2,7 +2,6 @@ import networkx as nx
 import numpy as np
 import tensorflow as tf
 from collections import namedtuple
-import training_util
 
 _USE_GLOBAL_STEP=0
 
@@ -211,7 +210,6 @@ def create_train_op(total_loss,
                     variables_to_train=None,
                     transform_grads_fn=None,
                     summarize_gradients=False,
-                    gate_gradients=tf_optimizer.Optimizer.GATE_OP,
                     aggregation_method=None,
                     colocate_gradients_with_ops=False,
                     check_numerics=True):
@@ -227,7 +225,7 @@ def create_train_op(total_loss,
         loss value.
   """
   if global_step is _USE_GLOBAL_STEP:
-    global_step = training_util.get_or_create_global_step()
+    global_step = tf.training_util.get_or_create_global_step()
 
   # Update ops use GraphKeys.UPDATE_OPS collection if update_ops is None.
   global_update_ops = set(ops.get_collection(ops.GraphKeys.UPDATE_OPS))
