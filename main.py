@@ -15,7 +15,6 @@ from sklearn import svm
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import ShuffleSplit
 import tqdm
-from scipy.spatial import distance
 
 import model
 
